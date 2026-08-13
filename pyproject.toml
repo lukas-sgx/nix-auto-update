@@ -7,7 +7,9 @@ name = "nix-auto-update"
 description = "Auto update pkgs & create PR in nixpkgs"
 
 version = "0.0.1-alpha"
-dependencies = []
+dependencies = [
+  "gitpython"
+]
 
 authors = [
   {name = "Lukas Soigneux", email = "lukas.soigneux@epitech.eu"},
