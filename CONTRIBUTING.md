@@ -1,6 +1,6 @@
 # Contributing
 
-Thanks for considering a contribution. This project template is intended to be reusable across many languages and project types, so contributions should stay clear, focused, and easy to adapt.
+Thanks for considering a contribution to nix-auto-update. This project is focused on automating nixpkgs updates and pull-request workflows, so contributions should stay clear, targeted, and easy to review.
 
 ## Table of Contents
 
@@ -23,29 +23,38 @@ Be respectful, constructive, and patient. Disagreements about implementation are
 
 ### Prerequisites
 
-- A working runtime or toolchain for the project you are scaffolding
-- A package manager or build tool appropriate to the stack you choose
-- A local development environment that can run tests or build checks
+- Python 3.10 or newer
+- Git
+- A local environment capable of installing the project in editable mode
+- Optional: a Nix environment if you want to validate package-update workflows locally
 
 ### Setup
 
 ```bash
-git clone <repository-url>
-cd <project-name>
-# Install dependencies or set up the local environment for your stack
+git clone https://github.com/lukas-sgx/nix-auto-update.git
+cd nix-auto-update
+python -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+pip install -e .
 ```
 
-Verify your setup works with the appropriate build or test command for your project.
+Verify your environment works by running the CLI entry point:
+
+```bash
+nix-auto-update
+```
 
 ## Project Structure
 
 | Path | Purpose |
 |------|---------|
-| `src/` or `app/` | Main implementation files |
+| `nix_auto_update/` | Main Python package and project logic |
+| `nix_auto_update/modules/` | Feature modules and reusable logic |
 | `tests/` | Automated tests and regression checks |
-| `docs/` | Usage notes, architecture, or other documentation |
+| `README.md` | Project overview and usage instructions |
+| `release-config.json` | Release metadata and versioning configuration |
 | `assets/` | Images, logos, and other static files |
-| `scripts/` | Helper scripts or automation |
 
 ## Development Workflow
 
@@ -57,12 +66,12 @@ Verify your setup works with the appropriate build or test command for your proj
    git checkout -b fix/short-description
    ```
 3. Make your changes, with tests where applicable
-4. Run the test suite locally (see [Testing](#testing))
-5. Push and open a Pull Request using the appropriate [PR template](.github/PULL_REQUEST_TEMPLATE/)
+4. Run the relevant validation commands locally (see [Testing](#testing))
+5. Push and open a Pull Request describing the update workflow or bug fix you addressed
 
 ## Commit Convention
 
-This project follows **[Conventional Commits](https://www.conventionalcommits.org/)** — it's required, since the release process (`release-config.json` / `.release-manifest.json`) depends on commit messages to determine versioning and changelog entries.
+This project follows **[Conventional Commits](https://www.conventionalcommits.org/)**. Keeping commit messages consistent helps with automation and release management based on `release-config.json`.
 
 ```
 <type>(<scope>): <short description>
@@ -75,37 +84,39 @@ Common types: `feat`, `fix`, `docs`, `refactor`, `test`, `build`, `chore`.
 ## Testing
 
 - Add or update tests when changing behavior.
-- Run the project’s normal test or validation commands before opening a PR.
-- If your change affects packaging, deployment, or user-facing behavior, verify it with the relevant checks.
+- Run the project’s validation commands before opening a PR.
+- If your change affects the CLI, package update logic, or release automation, verify it with the relevant local checks.
+- Keep regression tests focused on the actual behavior being changed.
 
 ## Submitting Changes
 
-Open your PR using the template that matches your change:
+Open a pull request with a clear summary of the issue or feature, the files changed, and the validation you ran locally.
 
-| Change type        | Template                                              |
-|---------------------|--------------------------------------------------------|
-| New feature          | `?template=feature.md`                                |
-| Bug fix               | `?template=hotfix.md`                                  |
-| Release (maintainers) | `?template=release.md`                                 |
+A PR is ready for review when:
 
-A PR is ready for review once every checkbox in its template is checked. Reviewers may ask for changes before merging — that's normal, not a rejection.
+- the change is focused and easy to understand
+- the relevant tests or checks have been run
+- the description explains the goal and effect of the update
+
+Reviewers may ask for changes before merging — that's normal and part of the process.
 
 ## Reporting Bugs / Requesting Features
 
-Please use the issue templates instead of opening a blank issue when possible.
+Please use an issue template when available, or open a clear issue with enough context to reproduce or discuss the request.
 
 - **Bug report**: include reproduction steps, expected behavior, actual behavior, and environment details.
 - **Feature request**: include goals, scope, and any constraints or dependencies.
+- **Nix update workflow request**: describe the package or workflow affected and the expected automation behavior.
 
 ## Release Process
 
 *(Maintainers only — included for transparency.)*
 
 1. Ensure all merged commits on `main` follow Conventional Commits
-2. Confirm `release-config.json` / `.release-manifest.json` are up to date
-3. Confirm the **Cartridge App** workflow is green on `stable`
-4. Open a release PR using the `release.md` template
-5. If a published release breaks downstream usage: publish a patch (`vX.Y.Z+1`) and yank the broken version on PyPI rather than force-pushing history
+2. Confirm `release-config.json` reflects the intended release metadata
+3. Validate the package and CLI still behave as expected
+4. Prepare a release commit or release PR when the update is ready to ship
+5. If a published release causes regressions, fix the issue quickly and ship a corrective patch instead of forcing a broken release
 
 ## Style Guidelines
 
