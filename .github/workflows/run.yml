@@ -11,7 +11,7 @@ jobs:
   build-run:
     runs-on: "ubuntu-latest"
     steps:
-    - uses: actions/checkout:v7
+    - uses: actions/checkout@v7
 
     - name: build
       run: pip install -r requirements.txt
