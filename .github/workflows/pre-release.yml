@@ -16,7 +16,6 @@ jobs:
       release_created: ${{ steps.pre-release.outputs.release_created }}
       tag_name: ${{ steps.pre-release.outputs.tag_name }}
 
-
     permissions:
       contents: write
       pull-requests: write
@@ -45,7 +44,7 @@ jobs:
     
     steps:
       - name: Install build tools
-        run: pip install buildx
+        run: pip install -r requirements.txt
       
       - name: Build
         run: pipx run build
