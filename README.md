@@ -1,24 +1,24 @@
 <div align="center">
-  <a href="https://github.com/repo-name-template/">
-    <img src="https://github.com/repo-name-template/blob/main/assets/template-logo.png?raw=true" alt="Logo" height="180" style="border-radius: 10px">
+  <a href="https://github.com/lukas-sgx/nix-auto-update/">
+    <img src="https://github.com/lukas-sgx/nix-auto-update/blob/main/assets/template-logo.png?raw=true" alt="Logo" height="180" style="border-radius: 10px">
   </a>
 
-  <h3 align="center">Project Template</h3>
+  <h3 align="center">nix-auto-update</h3>
 
-  [![License](https://img.shields.io/github/license/@your-name/@your-repo?style=for-the-badge)](./LICENSE)
-  [![Build Status](https://img.shields.io/github/actions/workflow/status/@your-name/@your-repo/ci.yml?style=for-the-badge)](https://github.com/@your-name/@your-repo/actions)
+  [![License](https://img.shields.io/github/license/lukas-sgx/nix-auto-update?style=for-the-badge)](./LICENSE)
+  [![Build Status](https://img.shields.io/github/actions/workflow/status/lukas-sgx/nix-auto-update/ci.yml?style=for-the-badge)](https://github.com/lukas-sgx/nix-auto-update/actions)
 
   <p align="center">
-    A flexible starter repository for new software projects.
+    Auto update nixpkgs & automate PR to it.
     <br />
-    <a href="https://github.com/repo-name-template"><strong>Explore the repository »</strong></a>
+    <a href="https://github.com/lukas-sgx/nix-auto-update"><strong>Explore the repository »</strong></a>
     <br />
     <br />
-    <a href="https://github.com/repo-name-template">View Demo</a>
+    <a href="https://github.com/lukas-sgx/nix-auto-update">View Demo</a>
     &middot;
-    <a href="https://github.com/repo-name-template/issues/new?template=bug-report.yml">Report Bug</a>
+    <a href="https://github.com/lukas-sgx/nix-auto-update/issues/new?template=bug-report.yml">Report Bug</a>
     &middot;
-    <a href="https://github.com/repo-name-template/issues/new?template=feature-request.yml">Request Feature</a>
+    <a href="https://github.com/lukas-sgx/nix-auto-update/issues/new?template=feature-request.yml">Request Feature</a>
   </p>
 </div>
 
@@ -49,52 +49,63 @@
 
 ## About The Project
 
-This repository is a generic starter template for building new software projects. It is designed to be easy to adapt for web, backend, CLI, desktop, scripting, or data-focused applications.
+nix-auto-update is a small automation tool designed to help maintainers keep Nix package definitions in sync with upstream changes and streamline the creation of update pull requests. The project focuses on a repeatable workflow for checking nixpkgs updates, preparing the relevant changes, and facilitating the PR process.
 
 ### Built With
 
-[![Markdown][Markdown-shield]][Markdown-url]
+[![Python][Python-shield]][Python-url]
+[![Nix][Nix-shield]][Nix-url]
 
 ## Getting Started
 
-To get a local copy up and running, follow these simple steps.
+To get a local copy up and running, follow these steps.
 
 ### Prerequisites
 
-You need a runtime, package manager, or toolchain that fits the stack you want to build.
+- Python 3.10 or newer
+- Git
+- A working Nix environment if you plan to test package updates locally
 
 ### Installation
 
 #### Development mode (clone the repo, with local changes)
 1. Clone the repository
 ```sh
-git clone https://github.com/repo-name-template.git
-cd project-template
+git clone https://github.com/lukas-sgx/nix-auto-update.git
+cd nix-auto-update
 ```
-2. Customize the files and structure for your project
+2. Create a virtual environment and install the project
 ```sh
-# Add your source code, tests, and configuration here
+python -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+pip install -e .
 ```
 
-#### Release mode (use it as a starting point)
+#### Release mode
 ```sh
-# Copy this repository and adapt it to your needs
+pip install nix-auto-update
 ```
 
 ## Usage
 
-Use this template as a foundation for your own project. Replace the placeholder content, choose your stack, and start building.
+After installing the project, run the CLI entry point:
 
-*For more advanced examples, please refer to the repository structure and adapt the code as needed.*
+```sh
+nix-auto-update
+```
+
+This command is the entry point for the automation workflow and can be extended to automate nixpkgs checks, update generation, and PR creation.
 
 ## Roadmap
 
-- [ ] Choose the target language or framework
-- [ ] Set up the project structure
-- [ ] Add core application logic
-- [ ] Add tests and documentation
+- [ ] Detect upstream nixpkgs updates automatically
+- [ ] Generate the relevant package update diff
+- [ ] Prepare a clean commit message and patch set
+- [ ] Automate pull request creation for upstream changes
+- [ ] Add tests and CI validation
 
-See the [open issues](https://github.com/repo-name-template/issues) for a full list of proposed features (and known issues).
+See the [open issues](https://github.com/lukas-sgx/nix-auto-update/issues) for a full list of proposed features (and known issues).
 
 ## Contributing
 
@@ -104,8 +115,8 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md) for setup instructions, commit conventi
 
 ### Top contributors:
 
-<a href="https://github.com/repo-name-template/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=repo-name-template" alt="contrib.rocks image" />
+<a href="https://github.com/lukas-sgx/nix-auto-update/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=lukas-sgx/nix-auto-update" alt="contrib.rocks image" />
 </a>
 
 ## License
@@ -114,12 +125,15 @@ Distributed under the MIT License. See [LICENSE](./LICENSE) for more information
 
 ## Contact
 
-Your Name - your.email@example.com
+`@lukas-sgx` - lukas.soigneux@epitech.eu
 
 ## Acknowledgments
 
-* [Markdown](https://www.markdownguide.org/) - The format used for documentation in this template
+* [Python](https://www.python.org/) - Main language used for the project automation
+* [Nix](https://nixos.org/) - The package ecosystem this project targets
 
-[Markdown-shield]: https://img.shields.io/badge/Markdown-000000?style=for-the-badge&logo=markdown&logoColor=white
-[Markdown-url]: https://www.markdownguide.org/
+[Python-shield]: https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white
+[Python-url]: https://www.python.org/
+[Nix-shield]: https://img.shields.io/badge/Nix-5277C3?style=for-the-badge&logo=nixos&logoColor=white
+[Nix-url]: https://nixos.org/
 
