@@ -1,0 +1,25 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "nix-auto-update"
+description = "Auto update pkgs & create PR in nixpkgs"
+
+version = "0.0.1-alpha"
+dependencies = []
+
+authors = [
+  {name = "Lukas Soigneux", email = "lukas.soigneux@epitech.eu"},
+]
+
+readme = "README.md"
+license = "MIT"
+license-files = ["LICENSE"]
+keywords = ["Nix", "NixOS"]
+
+[tool.setuptools.packages.find]
+include = ["nix_auto_update*"]
+
+[project.scripts]
+nix-auto-update = "nix_auto_update.cli:main"

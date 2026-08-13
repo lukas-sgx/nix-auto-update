@@ -1,0 +1,21 @@
+name: Security Audit
+
+on:
+  push:
+    paths: 
+      - '**/pyproject.toml'
+  pull_request:
+    paths: 
+      - '**/pyproject.toml'
+  schedule:
+    - cron: '0 0 * * 1'
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Run security-audit
+        uses: pypa/gh-action-pip-audit@v1.1.0
+        with:
+          inputs: pyproject.toml
