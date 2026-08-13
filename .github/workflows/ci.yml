@@ -39,7 +39,7 @@ jobs:
           
   build:
     needs: sanity-check
-    runs-on: ${{ matrix.platform.os }}
+    runs-on: "ubuntu-latest"
 
     steps:
     - uses: actions/checkout@v6
