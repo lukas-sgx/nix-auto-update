@@ -29,3 +29,5 @@ bin/
 build/
 
 *.egg-info
+
+nixpkgs
