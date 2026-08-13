@@ -1,5 +1,15 @@
 # Changelog
 
+## [0.0.1-alpha](https://github.com/lukas-sgx/nix-auto-update/compare/v0.0.1-alpha...v0.0.1-alpha) (2026-08-13)
+
+
+* release 0.0.1-alpha ([1e3e81e](https://github.com/lukas-sgx/nix-auto-update/commit/1e3e81ea23eb88dd3802150386a230328f8c2f16))
+
+
+### New APIs / Features
+
+* add checkout action ([3cffa4d](https://github.com/lukas-sgx/nix-auto-update/commit/3cffa4dde20fc4ad4fe016a88fc55e1fc9bc01f5))
+
 ## 0.0.1-alpha (2026-08-13)
 
 
