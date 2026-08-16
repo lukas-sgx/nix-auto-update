@@ -8,7 +8,13 @@
   packages = [ pkgs.git ];
 
   # https://devenv.sh/languages/
-  # languages.rust.enable = true;
+  languages.python = {
+    enable = true;
+    venv = {
+      enable = true;
+      requirements = ./requirements.txt;
+    };
+  };
 
   # https://devenv.sh/processes/
   # processes.dev.exec = "${lib.getExe pkgs.watchexec} -n -- ls -la";
@@ -17,13 +23,13 @@
   # services.postgres.enable = true;
 
   # https://devenv.sh/scripts/
-  scripts.hello.exec = ''
-    echo hello from $GREET
+  scripts.project.exec = ''
+    pip install -e .
   '';
 
   # https://devenv.sh/basics/
   enterShell = ''
-    hello         # Run scripts directly
+    project         # Run scripts directly
     git --version # Use packages
   '';
 
