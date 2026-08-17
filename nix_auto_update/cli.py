@@ -36,7 +36,8 @@ def main():
         if item.is_dir():
             print(f" - {item.name}")
             for subitem in item.iterdir():
-                print(f"   |-- {subitem.name}")
-                os.chdir(subitem.name)
-                subprocess.run(["nix-shell", "-p", "nix-update"], check=True)
-                subprocess.run(["nix-update"], check=True)
+                if subitem.is_dir():
+                    print(f"   |-- {subitem.name}")
+                    os.chdir(subitem.name)
+                    subprocess.run(["nix-shell", "-p", "nix-update"], check=True)
+                    subprocess.run(["nix-update"], check=True)
