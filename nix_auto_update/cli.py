@@ -28,14 +28,17 @@ def main():
     clone_repo("git@github.com:lukas-sgx/nixpkgs.git", "nixpkgs")
 
     base_path = Path("nixpkgs/pkgs/by-name")
-    base_path.cwd()
+    print(f"Current working directory: {Path.cwd()}")
 
     for item in base_path.iterdir():
-        if item.is_dir():
-            print(f" - {item.name}")
-            for subitem in item.iterdir():
-                if subitem.is_dir():
-                    print(f"   |-- {subitem.name}")
-                    os.chdir(subitem.name)
-                    subprocess.run(["nix-shell", "-p", "nix-update"], check=True)
-                    subprocess.run(["nix-update"], check=True)
+        if not item.is_dir():
+            continue
+        print(f"- {item.name}")
+
+        for subitem in item.iterdir():
+            if not subitem.is_dir():
+                continue
+            print(f"  |-- {subitem.name}")
+
+            subprocess.run(["nix-shell", "-p", "nix-update"], cwd=subitem, check=True)
+            subprocess.run(["nix-update"], cwd=subitem, check=True)
