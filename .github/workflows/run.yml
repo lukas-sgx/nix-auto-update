@@ -26,8 +26,11 @@ jobs:
 
     - name: Caching Nixpkgs
       uses: actions/cache@v4
+      env:
+          cache-name: cache-pkgs
       with:
         path: ~/nixpkgs
+        key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ github.sha }}
 
     - name: Clone repo
       run: |
