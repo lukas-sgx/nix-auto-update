@@ -34,7 +34,7 @@ jobs:
 
     - name: Clone repo
       run: |
-        git clone git@github.com:lukas-sgx/nixpkgs
+        git clone git@github.com:lukas-sgx/nixpkgs --depth=1
         cd nixpkgs
         git config user.name "lukas-sgx"
         git config user.email "lukas.soigneux@epitech.eu"
