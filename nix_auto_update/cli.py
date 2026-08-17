@@ -40,5 +40,8 @@ def main():
                 continue
             print(f"  |-- {subitem.name}")
 
-            subprocess.run(["nix-shell", "-p", "nix-update"], cwd=subitem, check=True)
-            subprocess.run(["nix-update"], cwd=subitem, check=True)
+            subprocess.run(
+                ["nix-shell", "-p", "nix-update", "--run", "nix-update"], 
+                cwd=subitem, 
+                check=True
+            )
