@@ -1,9 +1,8 @@
+import os
+import subprocess
 from pathlib import Path
 
-import os
-
 import git
-import subprocess
 
 
 def clone_repo(remote_url, target_dir):
