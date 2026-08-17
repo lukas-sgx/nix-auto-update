@@ -1,6 +1,9 @@
+from pathlib import Path
+
 import os
 
 import git
+import subprocess
 
 
 def clone_repo(remote_url, target_dir):
@@ -22,8 +25,18 @@ def clone_repo(remote_url, target_dir):
         print(e)
 
 
+
 def main():
     clone_repo("git@github.com:lukas-sgx/nixpkgs.git", "nixpkgs")
-    os.chdir("nixpkgs/pkgs/by-name")
-    for name in os.listdir("."):
-        print(name)
+
+    base_path = Path("nixpkgs/pkgs/by-name")
+    base_path.cwd()
+
+    for item in base_path.iterdir():
+        if item.is_dir():
+            print(f" - {item.name}")
+            for subitem in item.iterdir():
+                print(f"   |-- {subitem.name}")
+                os.chdir(subitem.name)
+                subprocess.run(["nix-shell", "-p", "nix-update"], check=True)
+                subprocess.run(["nix-update"], check=True)
