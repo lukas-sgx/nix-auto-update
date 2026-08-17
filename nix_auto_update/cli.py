@@ -25,7 +25,6 @@ def clone_repo(remote_url, target_dir):
         print(e)
 
 
-
 def main():
     clone_repo("git@github.com:lukas-sgx/nixpkgs.git", "nixpkgs")
 
