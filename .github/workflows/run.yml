@@ -54,5 +54,5 @@ jobs:
         git config --global user.email "lukas.soigneux@epitech.eu"
         nix-auto-update
       env:
-        GH_TOKEN: ${{ github.token }}
+        GH_TOKEN: ${{ secrets.GITHUB_ACCESS_TOKEN }}
         GITHUB_TOKEN: ${{ secrets.GITHUB_ACCESS_TOKEN }}
