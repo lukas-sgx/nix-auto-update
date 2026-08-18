@@ -30,7 +30,6 @@ def main():
     os.chdir("nixpkgs")
     base_path = Path("pkgs/by-name")
 
-
     for item in base_path.iterdir():
         if not item.is_dir():
             continue
@@ -55,12 +54,27 @@ def main():
             if res.returncode != 0:
                 continue
 
+            version = subprocess.run(
+                [
+                    "head",
+                    "-n",
+                    "1",
+                    "commit-file",
+                    "|",
+                    "cut",
+                    "-d'>'",
+                    "-f2",
+                ],
+                check=False,
+                capture_output=True
+            )
+
             subprocess.run(
                 [
                     "git",
                     "checkout",
                     "-b",
-                    f"{subitem.name}-$(head -n 1 commit-file | cut -d '>' -f 2)",
+                    f"{subitem.name}-{version.stdout.decode()}",
                 ],
                 check=False,
             )
@@ -78,7 +92,7 @@ def main():
                     "push",
                     "--set-upstream",
                     "origin",
-                    f"{subitem.name}-$(head -n 1 commit-file | cut -d '>' -f 2)",
+                    f"{subitem.name}-{version.stdout.decode()}",
                 ],
                 check=False,
             )
@@ -93,7 +107,7 @@ def main():
                     "--head",
                     f"{subitem.name}-$(head -n 1 commit-file | cut -d '>' -f 2)",
                     "--title",
-                    "$(head -n 1 commit-file)",
+                    f"{version.stdout.decode()}",
                 ],
                 check=False,
             )
