@@ -107,7 +107,7 @@ def main():
                     "pr",
                     "create",
                     "--base",
-                    "NixOS/nixpkgs",
+                    "NixOS/nixpkgs:master",
                     "--head",
                     f"{subitem.name}-{version}",
                     "--title",
@@ -116,6 +116,7 @@ def main():
                     ".github/PULL_REQUEST_TEMPLATE.md",
                 ],
                 check=False,
+                env=os.environ.copy(),
             )
 
             subprocess.run(["rm", "commit-file"], check=False)
