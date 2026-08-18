@@ -55,4 +55,3 @@ jobs:
         nix-auto-update
       env:
         GH_TOKEN: ${{ secrets.GTHUB_ACCESS_TOKEN }}
-        GITHUB_TOKEN: ${{ secrets.GTHUB_ACCESS_TOKEN }}
