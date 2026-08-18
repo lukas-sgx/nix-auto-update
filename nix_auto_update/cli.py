@@ -80,6 +80,16 @@ def main():
             )
 
             subprocess.run(
+                ["git", "add", f"{base_path.name}/{shard.name}/{subitem.name}/**"],
+                check=False,
+            )
+
+            subprocess.run(
+                ["git", "commit", "-m", f"{first_line}"],
+                check=False,
+            )
+
+            subprocess.run(
                 [
                     "git",
                     "push",
@@ -101,6 +111,8 @@ def main():
                     f"{subitem.name}-{version}",
                     "--title",
                     f"{first_line}",
+                    "--body-file",
+                    ".github/PULL_REQUEST_TEMPLATE.md",
                 ],
                 check=False,
             )
