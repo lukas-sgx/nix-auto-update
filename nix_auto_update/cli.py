@@ -1,7 +1,9 @@
 import os
 import subprocess
 from pathlib import Path
+
 import git
+
 
 def clone_repo(remote_url, target_dir):
     try:
@@ -18,6 +20,7 @@ def clone_repo(remote_url, target_dir):
     except (git.exc.GitCommandError, git.exc.InvalidGitRepositoryError) as e:
         print(f"Git error: {e}")
         return None
+
 
 def main():
     target_dir = "nixpkgs"
@@ -40,7 +43,7 @@ def main():
         print(f"- {shard.name}")
 
         for subitem in shard.iterdir():
-            if not subitem.is_dir() or subitem.name != "lmms":
+            if not subitem.is_dir():
                 continue
             print(f"  |-- {subitem.name}")
 
@@ -62,13 +65,13 @@ def main():
             try:
                 with open("commit-file", "r") as f:
                     first_line = f.readline().strip()
-                
+
                 if "->" in first_line:
                     version = first_line.split("->")[-1].strip()
                 else:
                     version = "update"
-            except Exception as e:
-                print(f"Failed to parse commit-file: {e}")
+            except OSError as e:
+                print(f"failed to parse commit-file: {e}")
                 continue
 
             subprocess.run(
