@@ -43,7 +43,7 @@ def main():
         print(f"- {shard.name}")
 
         for subitem in shard.iterdir():
-            if not subitem.is_dir():
+            if not subitem.is_dir() or subitem.name != "lmms":
                 continue
             print(f"  |-- {subitem.name}")
 
