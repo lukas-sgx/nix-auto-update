@@ -70,8 +70,6 @@ def main():
 
             subprocess.run(["git", "commit", "-m", "$(cat commit-file)"], check=False)
 
-            subprocess.run(["rm", "commit-file"], check=False)
-
             subprocess.run(
                 [
                     "git",
@@ -82,5 +80,22 @@ def main():
                 ],
                 check=False,
             )
+
+            subprocess.run(
+                [
+                    "gh",
+                    "pr",
+                    "create",
+                    "--base",
+                    "NixOS/nixpkgs",
+                    "--head",
+                    f"{subitem.name}-$(head -n 1 commit-file | cut -d '>' -f 2)",
+                    "--title",
+                    "$(head -n 1 commit-file)",
+                ],
+                check=False,
+            )
+
+            subprocess.run(["rm", "commit-file"], check=False)
 
             subprocess.run(["git", "checkout", "master"], check=False)
