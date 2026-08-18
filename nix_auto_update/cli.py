@@ -111,7 +111,7 @@ def main():
                     "--base",
                     "master",
                     "--head",
-                    f"{subitem.name}-{version}",
+                    f"lukas-sgx:{subitem.name}-{version}",
                     "--title",
                     f"{first_line}",
                     "--body-file",
