@@ -43,7 +43,7 @@ def main():
         print(f"- {shard.name}")
 
         for subitem in shard.iterdir():
-            if not subitem.is_dir() or subitem.name != "lmms":
+            if not subitem.is_dir():
                 continue
             print(f"  |-- {subitem.name}")
 
@@ -54,7 +54,7 @@ def main():
                     "nix-update",
                     "nix-prefetch-git",
                     "--run",
-                    f"nix-update --file . --write-commit-message commit-file {subitem.name}",
+                    f"nix-update --file . --build --write-commit-message commit-file {subitem.name}",
                 ],
                 check=False,
             )
