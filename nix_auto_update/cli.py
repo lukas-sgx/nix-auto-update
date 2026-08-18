@@ -80,7 +80,7 @@ def main():
             )
 
             subprocess.run(
-                ["git", "add", f"{base_path.name}/{shard.name}/{subitem.name}/**"],
+                ["git", "add", f"pkgs/{base_path.name}/{shard.name}/{subitem.name}/**"],
                 check=False,
             )
 
