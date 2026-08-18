@@ -52,6 +52,7 @@ def main():
                     "nix-shell",
                     "-p",
                     "nix-update",
+                    "nix-prefetch-git",
                     "--run",
                     f"nix-update --file . --write-commit-message commit-file {subitem.name}",
                 ],
