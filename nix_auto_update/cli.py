@@ -78,3 +78,33 @@ def main():
                 ["git", "checkout", "-b", f"{subitem.name}-{version}"],
                 check=False,
             )
+
+            subprocess.run(
+                [
+                    "git",
+                    "push",
+                    "--set-upstream",
+                    "origin",
+                    f"{subitem.name}-{version}",
+                ],
+                check=False,
+            )
+
+            subprocess.run(
+                [
+                    "gh",
+                    "pr",
+                    "create",
+                    "--base",
+                    "NixOS/nixpkgs",
+                    "--head",
+                    f"{subitem.name}-{version}",
+                    "--title",
+                    f"{first_line}",
+                ],
+                check=False,
+            )
+
+            subprocess.run(["rm", "commit-file"], check=False)
+
+            subprocess.run(["git", "checkout", "master"], check=False)
