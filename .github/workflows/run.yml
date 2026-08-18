@@ -55,3 +55,4 @@ jobs:
         nix-auto-update
       env:
         GH_TOKEN: ${{ github.token }}
+        GH_REPO: "lukas-sgx/nixpkgs"
