@@ -40,33 +40,47 @@ def main():
             print(f"  |-- {subitem.name}")
 
             res = subprocess.run(
-                ["nix-shell", "-p", "nix-update", "--run", f"nix-update {subitem.name} --write-commit-message commit-file"],
+                [
+                    "nix-shell",
+                    "-p",
+                    "nix-update",
+                    "--run",
+                    f"nix-update {subitem.name} --write-commit-message commit-file",
+                ],
+                check=False,
             )
 
             if res.returncode != 0:
                 continue
 
             subprocess.run(
-                ["git", "checkout", "-b", f"{subitem.name}-$(head -n 1 commit-file | cut -d '>' -f 2)"],
+                [
+                    "git",
+                    "checkout",
+                    "-b",
+                    f"{subitem.name}-$(head -n 1 commit-file | cut -d '>' -f 2)",
+                ],
+                check=False,
             )
 
             subprocess.run(
                 ["git", "add", f"pkgs/by-name/{item.name}/{subitem.name}/*"],
+                check=False,
             )
+
+            subprocess.run(["git", "commit", "-m", "$(cat commit-file)"], check=False)
+
+            subprocess.run(["rm", "commit-file"], check=False)
 
             subprocess.run(
-                ["git", "commit", "-m", "$(cat commit-file)"],
+                [
+                    "git",
+                    "push",
+                    "--set-upstream",
+                    "origin",
+                    f"{subitem.name}-$(head -n 1 commit-file | cut -d '>' -f 2)",
+                ],
+                check=False,
             )
 
-            subprocess.run(
-                ["rm", "commit-file"],
-            )
-
-            subprocess.run(
-                ["git", "push", "--set-upstream", "origin", f"{subitem.name}-$(head -n 1 commit-file | cut -d '>' -f 2)"],
-            )
-
-            subprocess.run(
-                ["git", "checkout", "master"],
-            )
-
+            subprocess.run(["git", "checkout", "master"], check=False)
