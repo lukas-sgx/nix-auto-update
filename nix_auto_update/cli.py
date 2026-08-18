@@ -45,7 +45,7 @@ def main():
                     "-p",
                     "nix-update",
                     "--run",
-                    f"nix-update {subitem.name} --write-commit-message commit-file",
+                    f"nix-update --file . --write-commit-message commit-file {subitem.name}",
                 ],
                 check=False,
             )
