@@ -35,7 +35,7 @@ def main():
         print(f"- {item.name}")
 
         for subitem in item.iterdir():
-            if not subitem.is_dir():
+            if not subitem.is_dir() or subitem.name != "lmms":
                 continue
             print(f"  |-- {subitem.name}")
 
