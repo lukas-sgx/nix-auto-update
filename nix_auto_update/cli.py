@@ -1,9 +1,7 @@
 import os
 import subprocess
 from pathlib import Path
-
 import git
-
 
 def clone_repo(remote_url, target_dir):
     try:
@@ -15,27 +13,33 @@ def clone_repo(remote_url, target_dir):
             return repo
 
         print(f"Cloning {remote_url} into '{target_dir}'...")
-        repo = git.Repo.clone_from(remote_url, to_path=target_dir, depth=1)
-        return repo
+        return git.Repo.clone_from(remote_url, to_path=target_dir, depth=1)
 
-    except git.exc.GitCommandError as e:
-        print(e)
-    except git.exc.InvalidGitRepositoryError as e:
-        print(e)
-
+    except (git.exc.GitCommandError, git.exc.InvalidGitRepositoryError) as e:
+        print(f"Git error: {e}")
+        return None
 
 def main():
-    clone_repo("git@github.com:lukas-sgx/nixpkgs.git", "nixpkgs")
+    target_dir = "nixpkgs"
+    clone_repo("git@github.com:lukas-sgx/nixpkgs.git", target_dir)
 
-    os.chdir("nixpkgs")
+    if not os.path.exists(target_dir):
+        print("Failed to clone or locate repository.")
+        return
+
+    os.chdir(target_dir)
     base_path = Path("pkgs/by-name")
 
-    for item in base_path.iterdir():
-        if not item.is_dir():
-            continue
-        print(f"- {item.name}")
+    if not base_path.exists():
+        print(f"Path '{base_path}' does not exist.")
+        return
 
-        for subitem in item.iterdir():
+    for shard in base_path.iterdir():
+        if not shard.is_dir():
+            continue
+        print(f"- {shard.name}")
+
+        for subitem in shard.iterdir():
             if not subitem.is_dir() or subitem.name != "lmms":
                 continue
             print(f"  |-- {subitem.name}")
@@ -51,67 +55,23 @@ def main():
                 check=False,
             )
 
-            if res.returncode != 0:
+            if res.returncode != 0 or not os.path.exists("commit-file"):
+                print("nix-update failed or commit-file was not created.")
                 continue
 
-            version = subprocess.run(
-                [
-                    "head",
-                    "-n",
-                    "1",
-                    "commit-file",
-                    "|",
-                    "cut",
-                    "-d'>'",
-                    "-f2",
-                ],
-                check=False,
-                capture_output=True
-            )
+            try:
+                with open("commit-file", "r") as f:
+                    first_line = f.readline().strip()
+                
+                if "->" in first_line:
+                    version = first_line.split("->")[-1].strip()
+                else:
+                    version = "update"
+            except Exception as e:
+                print(f"Failed to parse commit-file: {e}")
+                continue
 
             subprocess.run(
-                [
-                    "git",
-                    "checkout",
-                    "-b",
-                    f"{subitem.name}-{version.stdout.decode()}",
-                ],
+                ["git", "checkout", "-b", f"{subitem.name}-{version}"],
                 check=False,
             )
-
-            subprocess.run(
-                ["git", "add", f"pkgs/by-name/{item.name}/{subitem.name}/*"],
-                check=False,
-            )
-
-            subprocess.run(["git", "commit", "-m", "$(cat commit-file)"], check=False)
-
-            subprocess.run(
-                [
-                    "git",
-                    "push",
-                    "--set-upstream",
-                    "origin",
-                    f"{subitem.name}-{version.stdout.decode()}",
-                ],
-                check=False,
-            )
-
-            subprocess.run(
-                [
-                    "gh",
-                    "pr",
-                    "create",
-                    "--base",
-                    "NixOS/nixpkgs",
-                    "--head",
-                    f"{subitem.name}-$(head -n 1 commit-file | cut -d '>' -f 2)",
-                    "--title",
-                    f"{version.stdout.decode()}",
-                ],
-                check=False,
-            )
-
-            subprocess.run(["rm", "commit-file"], check=False)
-
-            subprocess.run(["git", "checkout", "master"], check=False)
