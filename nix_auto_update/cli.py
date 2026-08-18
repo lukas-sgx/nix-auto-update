@@ -27,7 +27,9 @@ def clone_repo(remote_url, target_dir):
 def main():
     clone_repo("git@github.com:lukas-sgx/nixpkgs.git", "nixpkgs")
 
-    base_path = Path("nixpkgs/pkgs/by-name")
+    os.chdir("nixpkgs")
+    base_path = Path("pkgs/by-name")
+
 
     for item in base_path.iterdir():
         if not item.is_dir():
