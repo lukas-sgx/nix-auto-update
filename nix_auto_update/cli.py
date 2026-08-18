@@ -28,7 +28,6 @@ def main():
     clone_repo("git@github.com:lukas-sgx/nixpkgs.git", "nixpkgs")
 
     base_path = Path("nixpkgs/pkgs/by-name")
-    print(f"Current working directory: {Path.cwd()}")
 
     for item in base_path.iterdir():
         if not item.is_dir():
@@ -40,8 +39,34 @@ def main():
                 continue
             print(f"  |-- {subitem.name}")
 
-            subprocess.run(
-                ["nix-shell", "-p", "nix-update", "--run", "nix-update"], 
-                cwd=subitem, 
-                check=True
+            res = subprocess.run(
+                ["nix-shell", "-p", "nix-update", "--run", f"nix-update {subitem.name} --write-commit-message commit-file"],
             )
+
+            if res.returncode != 0:
+                continue
+
+            subprocess.run(
+                ["git", "checkout", "-b", f"{subitem.name}-$(head -n 1 commit-file | cut -d '>' -f 2)"],
+            )
+
+            subprocess.run(
+                ["git", "add", f"pkgs/by-name/{item.name}/{subitem.name}/*"],
+            )
+
+            subprocess.run(
+                ["git", "commit", "-m", "$(cat commit-file)"],
+            )
+
+            subprocess.run(
+                ["rm", "commit-file"],
+            )
+
+            subprocess.run(
+                ["git", "push", "--set-upstream", "origin", f"{subitem.name}-$(head -n 1 commit-file | cut -d '>' -f 2)"],
+            )
+
+            subprocess.run(
+                ["git", "checkout", "master"],
+            )
+
