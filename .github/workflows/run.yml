@@ -1,4 +1,4 @@
-name: run
+name: Runner
 
 on:
 #   schedule:
@@ -10,12 +10,17 @@ on:
 jobs:
   build-run:
     runs-on: "ubuntu-latest"
+    environment: "running"
+
+    permissions:
+      contents: write
+      pull-requests: write
   
     steps:
     - uses: actions/checkout@v7
 
     - name: Installer Nix
-      uses: cachix/install-nix-action@v30
+      uses: cachix/install-nix-action@v31
       with:
         nix_path: nixpkgs=channel:nixos-unstable
 
@@ -24,17 +29,30 @@ jobs:
       with:
         ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
+    - name: Caching Nixpkgs
+      uses: actions/cache@v4
+      env:
+          cache-name: cache-pkgs
+      with:
+        path: ~/nixpkgs
+        key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ github.sha }}
+
     - name: Clone repo
       run: |
-        git clone git@github.com:lukas-sgx/nixpkgs
+        git clone git@github.com:lukas-sgx/nixpkgs --depth=1
         cd nixpkgs
-        git config user.name "github-actions[bot]"
-        git config user.email "github-actions[bot]@users.noreply.github.com"
-
+        git config user.name "lukas-sgx"
+        git config user.email "lukas.soigneux@epitech.eu"
+        git pull
     - name: Build
       run: |
         pip install -r requirements.txt
         pip install -e .
 
     - name: Run
-      run: nix-auto-update
+      run: |
+        git config --global user.name "lukas-sgx"
+        git config --global user.email "lukas.soigneux@epitech.eu"
+        nix-auto-update
+      env:
+        GH_TOKEN: ${{ secrets.GH_SECRET }}
