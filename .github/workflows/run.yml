@@ -45,4 +45,9 @@ jobs:
         pip install -e .
 
     - name: Run
-      run: nix-auto-update
+      run: |
+        git config --global user.name "lukas-sgx"
+        git config --global user.email "lukas.soigneux@epitech.eu"
+        nix-auto-update
+      env:
+        GH_TOKEN: ${{ github.token }}
