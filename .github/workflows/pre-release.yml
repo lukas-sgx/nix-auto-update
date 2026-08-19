@@ -19,7 +19,6 @@ jobs:
     permissions:
       contents: write
       pull-requests: write
-      id-token: write
       issues: write
 
     steps:
@@ -62,8 +61,51 @@ jobs:
           path: dist/*
           retention-days: 5
 
-      - name: Publish to PyPI
-        if: ${{ needs.release.outputs.release_created }}
-        uses: pypa/gh-action-pypi-publish@release/v1
-        with:
-          packages-dir: dist/
+  open_pull_request:
+      if: github.ref_name == 'staging' && github.event_name == 'push'
+      needs:
+        - build-deploy
+      runs-on: ubuntu-latest
+      permissions:
+        pull-requests: write
+        contents: read
+      steps:
+        - uses: actions/checkout@v7
+          with:
+            fetch-depth: 0
+
+        - name: Check diff commits
+          env:
+            GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          run: |
+            AHEAD_COMMITS=$(gh api repos/${{ github.repository }}/compare/stable...${{ github.ref_name }} --jq '.ahead_by')
+
+            if [ "$AHEAD_COMMITS" -eq 0 ]; then
+              exit 0
+            fi
+  
+        - name: Create or Update PR
+          env:
+            GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          run: |
+            BASE_BRANCH="stable"
+            COMPARE_TARGET="origin/stable"
+
+            BACKLINE=$'\n'
+            COMMITS_LIST="### List of changements:${BACKLINE}"
+            COMMITS_LIST+="$(git log ${COMPARE_TARGET}..HEAD --oneline --pretty=format:"- %s (%h)")"
+
+            gh pr create \
+              --title "merge: ${{ github.ref_name }} -> ${BASE_BRANCH}" \
+              --body "$COMMITS_LIST" \
+              --base "$BASE_BRANCH" \
+              --head "${{ github.ref_name }}" || {
+                
+                PR_NUMBER=$(gh pr list --head "${{ github.ref_name }}" --base "$BASE_BRANCH" --json "number" -q '.[0].number')
+        
+                if [ -n "$PR_NUMBER" ]; then
+                    gh pr edit "$PR_NUMBER" --body "$COMMITS_LIST"
+                else
+                    exit 0
+                fi
+            }
