@@ -27,7 +27,7 @@ def main():
     clone_repo("git@github.com:lukas-sgx/nixpkgs.git", target_dir)
 
     found = False
-    objective = "foxmarks"
+    objective = "whichllm"
 
     if not os.path.exists(target_dir):
         print("Failed to clone or locate repository.")
