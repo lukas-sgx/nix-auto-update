@@ -26,6 +26,9 @@ def main():
     target_dir = "nixpkgs"
     clone_repo("git@github.com:lukas-sgx/nixpkgs.git", target_dir)
 
+    found = False
+    objective = "whichllm"
+
     if not os.path.exists(target_dir):
         print("Failed to clone or locate repository.")
         return
@@ -43,7 +46,9 @@ def main():
         print(f"- {shard.name}")
 
         for subitem in shard.iterdir():
-            if not subitem.is_dir():
+            if subitem.name == objective:
+                found = True
+            if not subitem.is_dir() or found == False:
                 continue
             print(f"  |-- {subitem.name}")
 
