@@ -25,12 +25,12 @@ jobs:
         nix_path: nixpkgs=channel:nixos-unstable
 
     - name: Setup SSH
-      uses: webfactory/ssh-agent@v0.9.0
+      uses: webfactory/ssh-agent@v0.10.0
       with:
         ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
     - name: Caching Nixpkgs
-      uses: actions/cache@v4
+      uses: actions/cache@v6
       env:
           cache-name: cache-pkgs
       with:
